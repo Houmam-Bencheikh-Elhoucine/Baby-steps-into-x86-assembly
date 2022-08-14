@@ -1,0 +1,89 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{tabto, tabularx}
+\title{\centering\textbf{Baby steps into x86 assembly language}}
+\author{Hamame BENCHEIKH LEHOCINE}
+\date{\today}
+
+\begin{document}
+    
+    \maketitle
+    \newpage
+    \begin{abstract}
+        \centering
+        This document is an introduction to x86 assembly addressed to computer science students 
+        to help them understand the different instructions an x86 CPU can perform and to help them 
+        write and read assembly code and get an idea about its output.
+
+
+        It will guide the reader from basic components of the CPU to the x86 instruction set
+        and how they work and finally the binary encoding of the assembly code.
+    \end{abstract}
+    \newpage
+    \section{Inside of the 80\_86 processor : }
+    \subsection{What is a CPU : }
+    \tabto{20pt}The CPU (central processing unit) is the most important component of the computer,
+     it takes charge of executing all the instructions and operations the computer has to perform.
+
+    It is resposible on performing all math and logic operations 
+    and comunicate with other components like the central memory 
+    (RAM) and external devices (Hard drive, Monitor, keyboard ...) 
+    as it handles any errors caused by hardware or software.
+    
+    \textbf{Note: }the word CPU is used to refer to a single CPU core.
+
+    \subsection{Components of an x86 CPU : }
+    The CPU has some specific components and electrical circuits to help it do the job correctly and fast.
+    \subsubsection{Clock : }
+    The clock is what organizes the CPU work.The CPU stays synchronized to it as it only executes an
+     operation within a time interval called a cycle then it moves to the second one, with that nothing will be executed in a mess.
+    
+    The higher the clock frequency, the faster the processor performs its actions.
+    
+    Actually, CPU clock speed ranges between 1.5 and more than 5 GHrz of clock frequency, 
+    meaning the processor can perform between 4 Billion to 5 Billion operations per second.
+    \textbf{fun fact: }The fastest clock speed ever reached is 8.805 Ghrz on an AMD Fx-8150 overclocked.
+
+    \subsubsection{Registers :}
+    Registers are chunks of memory with very low size but they work as fast as the clock speed. 
+    they are used for storing data fetched from memory, 
+    saving information for very short range usage and also important data like the adress of the upcoming instruction and memory sections (more on that later).
+    the very old CPUs had only 16 bits = 2 bytes registers, then 32 bits = 4 bytes registers, and recent ones have 
+    64 bits = 8 bytes registers.
+
+    in this document we will focus on 16 bit and 32 bit registers.
+    \paragraph{General Purpose Registers: }As the name suggests, they serve multiple purposes.
+    These registers are accessible to the user so he can modify their contents in his program.
+    They can be used for anything but generally they are used for specific operations.(they will be explained later)
+    In an x86 16 bit CPU, there are 8 GPRs: 
+    \begin{itemize}
+        \item \textbf{Accumulator Register (AX):}  used for arithmetic and logic operations holding one of the operands or holding the result of the calculation.
+        \item \textbf{Base Register (BX):}  used to store the offset in the RAM.
+        \item \textbf{Counter Register (CX):}  used in instructions that require repitition.
+        \item \textbf{Data Register (DX):}  used when there is not enough space in the AX register.
+        \item \textbf{stack Base Pointer Register (BP):}  used to determine the adress of the base of the stack.
+        \item \textbf{Stack Pointer Register (SP):}  used to determine the adress of the top of the stack.
+        \item \textbf{Source Index Register (SI):}  used in string operations holding the adress of the source string.
+        \item \textbf{Destination Index Register (DI):}  used in string operations holding the adress of the destination string.
+    \end{itemize}
+    These registers are able to be devided into parts of half their original size. as they have been extended in 32 bit processors.
+
+    the diagram below shows how the registers are devided
+    %TODO: make the graphic%
+    \paragraph{Section Registers: }These pointers determine the begining of each section in the central memory, 
+    following the Von Neueman architecture
+    These registers can not be modified in the code.
+    there are 4 memory sections:
+    \begin{itemize}
+        \item \textbf{Data Section(DS): }determines begining of the section where all data is stored.
+        \item \textbf{Code Section(CS): }determines begining of the section where the programs are stored.
+        \item \textbf{Stack Section(SS): }determines the begining of the stack section.
+        \item \textbf{Extra Section(ES): }determines the begining of the extra section.
+    \end{itemize}
+    There can be more registers to determine more extra sections like FS and GS but we won't care about them.
+
+    The memory sections that we will care about are Data section, Code section and stack section.
+
+    \paragraph{Instruction Pointer and Instruction Register: }The instruction pointer register saves the adress of the next instruction to run.
+    The instruction register saves the instruction to execute once loaded from the central memory.
+\end{document}
