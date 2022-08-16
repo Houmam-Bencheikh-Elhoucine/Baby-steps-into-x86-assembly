@@ -1,6 +1,6 @@
 \documentclass[10pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage{tabto, tabularx}
+\usepackage{tabto, hyperref}
 \title{\centering\textbf{Baby steps into x86 assembly language}}
 \author{Hamame BENCHEIKH LEHOCINE}
 \date{\today}
@@ -33,19 +33,19 @@
     \textbf{Note: }the word CPU is used to refer to a single CPU core.
 
     \subsection{Components of an x86 CPU : }
-    The CPU has some specific components and electrical circuits to help it do the job correctly and fast.
+    \tabto{20pt}The CPU has some specific components and electrical circuits to help it do the job correctly and fast.
     \subsubsection{Clock : }
-    The clock is what organizes the CPU work.The CPU stays synchronized to it as it only executes an
+    \tabto{20pt}The clock is what organizes the CPU work.The CPU stays synchronized to it as it only executes an
      operation within a time interval called a cycle then it moves to the second one, with that nothing will be executed in a mess.
     
     The higher the clock frequency, the faster the processor performs its actions.
     
     Actually, CPU clock speed ranges between 1.5 and more than 5 GHrz of clock frequency, 
     meaning the processor can perform between 4 Billion to 5 Billion operations per second.
-    \textbf{fun fact: }The fastest clock speed ever reached is 8.805 Ghrz on an AMD Fx-8150 overclocked.
+    \\\textbf{Fun fact: }The fastest clock speed ever reached is 8.805 Ghrz on an AMD Fx-8150 overclocked.
 
     \subsubsection{Registers :}
-    Registers are chunks of memory with very low size but they work as fast as the clock speed. 
+    \tabto{20pt}Registers are chunks of memory with very low size but they work as fast as the clock speed. 
     they are used for storing data fetched from memory, 
     saving information for very short range usage and also important data like the adress of the upcoming instruction and memory sections (more on that later).
     the very old CPUs had only 16 bits = 2 bytes registers, then 32 bits = 4 bytes registers, and recent ones have 
@@ -86,4 +86,95 @@
 
     \paragraph{Instruction Pointer and Instruction Register: }The instruction pointer register saves the adress of the next instruction to run.
     The instruction register saves the instruction to execute once loaded from the central memory.
-\end{document}
+    \newpage
+    
+    \section{Hello assembly : }
+    \tabto{20pt}In this section we will discuss the basic x86 assembly instructions and how each one works.
+    
+    But first, what is assembly language??
+    \subsection{What is assembly language : }
+    \tabto{20pt}Basically, assembly language is the simplified form of machine code, invented in %year of invention
+    by %Creator of assembly language
+    to help developpers write better code so that instead of ones and zeros in binary code, we write actual english-like words to refer to instructions and
+    all the other stuff.
+
+    Assembly language depends on the processor architecture and the operating system used, x86 instructions are 
+    different from ARM instructions and Windows assembly is different from Linux or MAC OS assembly (in some parts).
+
+    Here we will be writing assembly for x86 CPU (Intel or AMD) on the Linux operating system.
+
+    \subsection{Environment Setup: }
+    \tabto{20pt}Before we start writing actual code, we need to setup our environment to write, compile and run our code.
+    
+    For that we need a compiler, we will use nasm (Netwide Assembler).The compiler is the software that will translate the english-like code into machine code stored in an object file (<filename>.o)
+    
+    Also we will need a linker which assembles all the object files into one single executable file.
+
+    \subsubsection{Linux Environment : }
+    \tabto{20pt}On your linux machine you can install nasm through apt (Debian based OS) or pacman (Arch based OS) using the following commands
+    \begin{verbatim}
+    sudo apt install nasm, binutils
+    \end{verbatim}
+    for debian based distribution (like Ubuntu, Kali Linux, POP OS\dots)\\
+    or instead
+    \begin{verbatim}
+    sudo pacman -Su nasm, binutils
+    sudo pamac install nasm, binutils
+    \end{verbatim}
+    for Arch based distribution (like Manjaro\dots)
+    \subsubsection{Windows Environment : }
+    \tabto{20pt}For that we can use Windows subsystem for Linux (WSL 2.0) and a linux terminal.
+
+    - Get the linux terminal from Windows store(windows 10 and better only)
+    - Follow the steps specified in \href{https://pureinfotech.com/install-windows-subsystem-linux-2-windows-10/}{this blog}
+    \subsection{Your first assembly program: "Hello assmebly"}
+    Now that oour environment is completely set up, now it's time to write some assembly code.
+
+    First start by creating a file "let's call it first\_program.asm" (Note that .asm is the extension for assembly program).
+
+    in first\_program.asm write the following code: 
+
+    \begin{verbatim}
+        section .data
+        message: db "Hello Assmebly", 0xa
+        length: equ 15
+
+        section .text
+        global _start
+        _start:
+            MOV EAX, 4 ; output
+            MOV EBX, 1 ; standard output
+            MOV ECX, message ; string to print
+            MOV EDX, length ; number of characters to print
+            INT 0x80 ; interrupt to execute the required function
+
+            MOV EAX, 1 ; exit
+            MOV EBX, 0 ; exit status
+            INT 0x80 
+    \end{verbatim}
+    Now after writing some code, let's compile and run it.\\
+    Head into your terminal, and type the following commands:
+    \begin{verbatim}
+        nasm -f elf32 first_program.asm -o first_program.o
+        ld -m elf_i386 first_program.o -o first_program
+        ./first_program
+    \end{verbatim}
+    And you will in your the terminal
+    \begin{verbatim}
+        Hello Assembly
+    \end{verbatim}
+    and the prompt in the next line, meaning that you have successfully written your first working program written in assembly
+    \\\textbf{Notes: }\begin{itemize}
+        \item Everything in the program will be explained later in the document.
+        \item In assembly, there is no escape character (like \textbackslash n) in higher level programming languages, so instead we replace it with its ASCII code $(10)_{10} = (a)_{16}$.
+        \item The (0x) prefix determines that the number is in hexadecimal, and (0b) determines that the number is in binary, while a number without a prefix is decimal.
+        \item We can replace (0x) prefix by (h) at the end of a hex number, and the (0b) by (b) at the end of a binary number\\
+        meaning (0x1cf is identical to 1cfh and 0b11100010111 is identical to 11100010111b).
+        \item when using (h) with a hexadecimal number prefix the number with 0 to avoid any errors (ex: ah can be interpreted as the AH register not as 10 in hex but 0ah is the number 10)
+        \item Assembly language is case insencitive, but many developers prefer to write the instructions in uppercase.
+        \item In Assembly, we can write one line comments starting with a semicolomn
+        \item the first command is the compilation command, the comiler was explained before.
+        \item the second command is the linking comand, the linker was previously explained.
+        \item the last one is to run the program.
+    \end{itemize}
+    \end{document}
