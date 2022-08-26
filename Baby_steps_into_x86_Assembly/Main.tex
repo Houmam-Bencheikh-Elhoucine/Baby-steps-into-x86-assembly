@@ -170,11 +170,62 @@
         \item The (0x) prefix determines that the number is in hexadecimal, and (0b) determines that the number is in binary, while a number without a prefix is decimal.
         \item We can replace (0x) prefix by (h) at the end of a hex number, and the (0b) by (b) at the end of a binary number\\
         meaning (0x1cf is identical to 1cfh and 0b11100010111 is identical to 11100010111b).
-        \item when using (h) with a hexadecimal number prefix the number with 0 to avoid any errors (ex: ah can be interpreted as the AH register not as 10 in hex but 0ah is the number 10)
-        \item Assembly language is case insencitive, but many developers prefer to write the instructions in uppercase.
+        \item when using (h) with a hexadecimal number prefix the number with 0 to avoid any errors (ex: ah can be interpreted as the AH register not as 10 in hex but 0ah is the number 10 in hex)
+        \item Assembly language is case insensitive, but many developers prefer to write the instructions in uppercase.
         \item In Assembly, we can write one line comments starting with a semicolomn
         \item the first command is the compilation command, the comiler was explained before.
         \item the second command is the linking comand, the linker was previously explained.
         \item the last one is to run the program.
     \end{itemize}
+    \tabto{20pt}Now that you've coded and executed your first assembly program, it's time to start exploring assembly instruction set in depth
+    \newpage
+    \section{Assembly Language in Depth: }
+    In this section we will walk through assembly language instructions and how each one of them works.
+    \subsection{Memory Sections: }
+    The memory organization of today's processors follows an architecture called \textbf{"Von Neueman architecture"}, it states that we use only one memory to store everything, but we split it into sections to better organize it.
+    and so that's what we do actually, all the code and data are stored in one RAM but in different locations (specified by the section registers).\\
+    \tabto{20pt}And so when we write assembly code we need to specify where this should be stored in the memory, and we can specify two sections only:
+    \subsubsection{Data Section: }
+    This section contains only the data that the program will use while executing. any variable (initialised or not) and any piece of data will have a reserved chunk of memory there.\\
+    \tabto{20pt}When we want to reserve memory for data in memory, we need to specify that we want to store them into data section, give name to the reserved chunk and specify its size.\\
+    to specify the chunk of memory we use the following commands:\\
+    \begin{verbatim}
+        section .data; for initialised variables
+        section .bss; for uninitialised variables
+    \end{verbatim}
+    
+    The .data section stores only the data that we already know its values (like "hello assmebly" in our first program).\\
+    While .bss section stores only the data that we don't know their values previously.\\
+
+    \subsubsection{How to define data chunks in .data and .bss sections: }
+    As mentioned before, we must give the reserved chunk of memory a name, specify the data type (and so the size of the chunk) and the values.\\
+    Following is the form for declaring a variable in memory.
+    \begin{verbatim}
+        <Label>: <type> value
+    \end{verbatim}
+    \textbf{Label: }specifies the name of the reserved memory chunk.
+    \textbf{type: }specifies the type of the variable.\\
+    In .data section we must prefix the type with the letter "d" (meaning data).\\
+    In .bss section we must prefix the type with the letter "res" (meaning reserve).\\
+    And then we give the first character of the type, we can reserve a byte "b", a word (two bytes) "w", a doubleword (four bytes) "d" and a quadword (8 bytes) "q".\\
+    After that we can specify the values (if on .data section) seperated by a comma (if we want to declare an "array" of the same type) or the number of chunks to reserve (in .bss section)
+    \\\textbf{Example: }
+    \begin{verbatim}
+    section .data
+        data1: dd 5, 3 ,0xc4, 0xff ; an array of 4 double words 
+        ;double word is the integer data size in C
+        
+        data2: db "Assembly is FUN!", 0xa; An array of words 
+        
+        ;strings are arrays of characters
+        ;characters are stored as their ASCII code
+
+        data3: db 256; this is illegal
+        ;you get a warning that this exceeds memory size
+
+    section .bss
+        var1: resb 5; reserves 5 bytes without initialising them.
+        var2: resw 20; reserves 20 words without initialisation.
+    \end{verbatim}
+
     \end{document}
